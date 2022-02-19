@@ -84,9 +84,12 @@ class WebSocket:
             self.events.close.add_listener(on_close)
 
     def wait_end(self):
-        loop = asyncio.get_event_loop()
-        pending_tasks = asyncio.all_tasks(loop)
-        loop.run_until_complete(asyncio.gather(*pending_tasks))
+        try:
+            loop = asyncio.get_event_loop()
+            pending_tasks = asyncio.all_tasks(loop)
+            loop.run_until_complete(asyncio.gather(*pending_tasks))
+        except KeyboardInterrupt:
+            pass
 
 
 def set_timeout(callback, delay: float, *args):
