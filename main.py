@@ -9,11 +9,11 @@ async def on_message(data):
 
 async def on_connect():
     print("on connect")
-    set_timeout(websocket.close, 10)
 
-    while websocket.ws:
-        await websocket.send({"value": "Hello World"})
-        await sleep(1)
+    await websocket.send({
+        "name": "message",
+        "props": {"text": "Hello!"},
+    })
 
 
 async def on_close():
