@@ -6,6 +6,9 @@ websocket = WebSocket("ws://lite-ch.net/li-learn-timer/ws/raspberry-pi")
 async def on_message(data):
     print("get", data)
 
+    if data["name"] != "ack":
+        await websocket.send({"name": "ack"})
+
 
 async def on_connect():
     print("on connect")
