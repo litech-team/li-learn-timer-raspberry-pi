@@ -1,6 +1,6 @@
 from lib.websocket import WebSocket, set_timeout, sleep
 
-websocket = WebSocket("ws://lite-ch.net/li-learn-timer/ws/raspberry-pi")
+websocket = WebSocket(r"wss://li-tech.net/li-learn-timer/ws/raspberry-pi")
 
 
 async def on_message(data):
