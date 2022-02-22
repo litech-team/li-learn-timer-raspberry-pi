@@ -3,20 +3,18 @@ from lib.websocket import WebSocket, set_timeout, sleep
 websocket = WebSocket(r"wss://li-tech.net/li-learn-timer/ws/raspberry-pi")
 
 
-async def on_message(data):
-    print("get", data)
+async def on_message(name: str, props: dict):
+    if name == "ack":
+        return
 
-    if data["name"] != "ack":
-        await websocket.send({"name": "ack"})
+    if True:
+        await websocket.send("ack")
 
 
 async def on_connect():
     print("on connect")
 
-    await websocket.send({
-        "name": "message",
-        "props": {"text": "Hello!"},
-    })
+    await websocket.send("message", {"text": "Hello!"})
 
 
 async def on_close():

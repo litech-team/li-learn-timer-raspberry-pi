@@ -43,9 +43,12 @@ class WebSocket:
 
         asyncio.ensure_future(self.eventloop())
 
-    async def send(self, data):
+    async def send(self, name, props = None):
         if self.ws:
-            message = json.dumps(data)
+            if props:
+                message = json.dumps({"name": name, "props": props})
+            else:
+                message = json.dumps({"name": name})
             await self.ws.send(message)
 
     async def close(self):
@@ -69,8 +72,10 @@ class WebSocket:
             while self.ws:
                 try:
                     message = await self.ws.recv()
-                    data = json.loads(message)
-                    self.events.message.fire(data)
+                    data: dict = json.loads(message)
+                    name = data.get("name", "")
+                    props = data.get("props", {})
+                    self.events.message.fire(name, props)
                 except:
                     self.events.close.fire()
                     self.ws = None
