@@ -43,7 +43,7 @@ class WebSocket:
 
         asyncio.ensure_future(self.eventloop())
 
-    async def send(self, name, props = None):
+    async def send(self, name, props=None):
         if self.ws:
             if props:
                 message = json.dumps({"name": name, "props": props})
