@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Callable
 
 import asyncio
 from dataclasses import dataclass
@@ -25,6 +26,40 @@ class EventHandler:
                 asyncio.ensure_future(listener(*args))
             else:
                 listener(*args)
+
+
+class Watcher(EventHandler):
+    def __init__(self):
+        super().__init__()
+        self.target: Callable | None = None
+        self.compare: Callable | None = None
+        self.delay: float = 0.1
+        self.stop_flag = False
+
+    async def eventloop(self):
+        if not self.target or not self.compare:
+            return
+
+        state = self.target()
+
+        while not self.stop_flag:
+            await asyncio.sleep(self.delay)
+            new_state = self.target()
+
+            if self.compare(new_state, state):
+                self.fire(new_state, state)
+                new_state = state
+
+    def start(self, target: Callable, *, compare: Callable = lambda v1, v2: v1 == v2, delay: float = 0.1):
+        self.target = target
+        self.compare = compare
+        self.delay = delay
+        self.stop_flag = False
+
+        asyncio.ensure_future(self.eventloop())
+
+    def stop(self):
+        self.stop_flag = True
 
 
 @dataclass
