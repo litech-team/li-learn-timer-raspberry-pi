@@ -13,6 +13,7 @@ async def on_message(name: str, props: dict):
 
 async def on_connect():
     print("on connect")
+    await websocket.send("send_pi_id : " + "hogehoge") # ラズパイのIDを送信
 
     await websocket.send("message", {"text": "Hello!"})
 
